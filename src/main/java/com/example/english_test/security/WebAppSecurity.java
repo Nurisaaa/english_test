@@ -20,6 +20,8 @@ public class WebAppSecurity {
         this.jwtTokenVerifier = jwtTokenVerifier;
     }
 
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors()

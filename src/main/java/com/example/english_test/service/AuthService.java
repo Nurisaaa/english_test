@@ -15,6 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final StudentRepository studentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthResponse login(AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -44,6 +46,7 @@ public class AuthService {
     }
 
     public StudentRegisterResponse register(StudentRegisterRequest request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         Student student = new Student(request);
         Student savedStudent = studentRepository.save(student);
         String token = jwtUtils.generateToken(savedStudent.getAuthInfo().getEmail());

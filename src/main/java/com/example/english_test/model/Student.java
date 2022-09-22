@@ -38,5 +38,13 @@ public class Student {
         authInfo1.setRole(Role.STUDENT);
         this.authInfo = authInfo1;
     }
+
+    public Student(String firstName, String lastName, int age, String phoneNumber, AuthInfo authInfo) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.phoneNumber = phoneNumber;
+        this.authInfo = authInfo;
+    }
 }
 

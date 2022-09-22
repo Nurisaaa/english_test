@@ -1,27 +1,28 @@
 package com.example.english_test.service;
 
 import com.example.english_test.dto.request.OptionRequest;
+import com.example.english_test.dto.request.PassTestRequest;
 import com.example.english_test.dto.request.QuestionRequest;
 import com.example.english_test.dto.request.TestRequest;
-import com.example.english_test.dto.response.OptionResponse;
-import com.example.english_test.dto.response.QuestionResponse;
-import com.example.english_test.dto.response.TestInnerPageResponse;
-import com.example.english_test.dto.response.TestResponse;
-import com.example.english_test.model.Option;
-import com.example.english_test.model.Question;
-import com.example.english_test.model.Test;
-import com.example.english_test.repostitory.TestRepository;
+import com.example.english_test.dto.response.*;
+import com.example.english_test.model.*;
+import com.example.english_test.repostitory.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class TestService {
 
     private final TestRepository testRepository;
+    private final StudentRepository studentRepository;
+    private final QuestionRepository questionRepository;
+    private final OptionRepository optionRepository;
+    private final ResultRepository resultRepository;
 
     public TestResponse save(TestRequest testRequest) {
         Test test = testRepository.save(convertToEntity(testRequest));
@@ -63,5 +64,25 @@ public class TestService {
             test.addQuestionToTest(question);
         }
         return test;
+    }
+
+    public ResultResponse passTest(PassTestRequest passTestRequest, AuthInfo authInfo) {
+        Integer countOfCorrectAnswer = 0;
+        Test test = testRepository.findById(passTestRequest.getTestId()).
+                orElseThrow(() -> new RuntimeException("test not found"));
+        for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
+            for (Long optionId : answer.getValue()) {
+                Option option = optionRepository.findById(optionId).get();
+                if (option.getIsTrue()) {
+                    countOfCorrectAnswer++;
+                }
+            }
+        }
+        Student student1 = studentRepository.findStudentByAuthInfoEmail(authInfo.getEmail());
+        Result result = new Result(countOfCorrectAnswer,test.getQuestions().size() + 1 - countOfCorrectAnswer,countOfCorrectAnswer,student1);
+        resultRepository.save(result);
+        return new ResultResponse(student1.getFirstName(),
+                countOfCorrectAnswer,
+                test.getQuestions().size() - countOfCorrectAnswer, countOfCorrectAnswer);
     }
 }
