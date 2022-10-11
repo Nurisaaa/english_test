@@ -14,22 +14,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @SpringBootApplication
 public class EnglishTestApplication {
-    private final PasswordEncoder passwordEncoder;
-    private final StudentRepository studentRepository;
+//    private final PasswordEncoder passwordEncoder;
+//    private final StudentRepository studentRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(EnglishTestApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner commandLiner() {
-        return (args) -> {
-            if (studentRepository.findStudentByAuthInfoEmail("aijamal@gmail.com") == null) {
-                AuthInfo authInfo = new AuthInfo("aijamal@gmail.com", passwordEncoder.encode("aijamal"), Role.STUDENT);
-                Student student = new Student("Aijamal", "Asangazieva", 18, "0999123456", authInfo);
-                studentRepository.save(student);
-            }
-        };
-    }
+//    @Bean
+//    public CommandLineRunner commandLiner() {
+//        return (args) -> {
+//            if (studentRepository.findStudentByAuthInfoEmail("aijamal@gmail.com") == null) {
+//                AuthInfo authInfo = new AuthInfo("aijamal@gmail.com", passwordEncoder.encode("aijamal"), Role.STUDENT);
+//                Student student = new Student("Aijamal", "Asangazieva", 18, "0999123456", authInfo);
+//                studentRepository.save(student);
+//            }
+//        };
+//    }
 
 }
