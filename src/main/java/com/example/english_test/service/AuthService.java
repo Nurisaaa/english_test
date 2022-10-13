@@ -25,7 +25,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,6 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -109,18 +107,26 @@ public class AuthService {
     }
 
     public AuthResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
+
         FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
+
         Student student;
+
         if (!authInfoRepository.existsAuthInfoByEmail(firebaseToken.getEmail())) {
             Student newStudent = new Student();
+
             newStudent.setFirstName(firebaseToken.getName());
-            newStudent.setAuthInfo(new AuthInfo(firebaseToken.getEmail(), firebaseToken.getEmail(), Role.STUDENT));
+
+            newStudent.setAuthInfo(new AuthInfo(firebaseToken.getEmail(),
+                    passwordEncoder.encode(firebaseToken.getEmail()),
+                    Role.STUDENT));
+
             student = studentRepository.save(newStudent);
+        } else {
+            student = studentRepository.findStudentByAuthInfoEmail(firebaseToken.getEmail());
         }
-        student = studentRepository.findStudentByAuthInfoEmail(firebaseToken.getEmail());
-        String token = jwtUtils.generateToken(student.getAuthInfo().getEmail());
         return new AuthResponse(student.getAuthInfo().getEmail(),
-                token,
+                jwtUtils.generateToken(student.getAuthInfo().getEmail()),
                 student.getAuthInfo().getRole());
     }
 }
