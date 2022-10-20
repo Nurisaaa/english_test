@@ -15,20 +15,17 @@ workflows:
   deploy-to-ecs:
     jobs:
       - aws-ecr/build-and-push-image:
-        name: "build-and-push-image"
-        account-url: AWS_ECR_URL
-        create-repo: false
-        dockerfile: Dockerfile
-        no-output-timeout: 20m
-        path: ./
-        region: AWS_DEFAULT_REGION
-        repo: enlglish_test
-        skip-when-tags-exist: false
-        tag: $CIRCLE_SHA1
-        filters:
-          branches:
-            only:
-              - master
-#  say-hello-workflow:
-#    jobs:
-#      - say-hello
+          name: "build-and-push-image"
+          account-url: AWS_ECR_URL
+          create-repo: false
+          dockerfile: Dockerfile
+          no-output-timeout: 20m
+          path: ./
+          region: AWS_DEFAULT_REGION
+          repo: enlglish_test
+          skip-when-tags-exist: false
+          tag: $CIRCLE_SHA1
+          filters:
+            branches:
+              only:
+                - master
