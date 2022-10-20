@@ -1,0 +1,1 @@
+-- insert into auth_info(email,password,role)values ('hello@gmail.com',"",'STUDENT')
