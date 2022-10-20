@@ -79,7 +79,7 @@ public class TestService {
             }
         }
         Student student1 = studentRepository.findStudentByAuthInfoEmail(authInfo.getEmail());
-        Result result = new Result(countOfCorrectAnswer,test.getQuestions().size() + 1 - countOfCorrectAnswer,countOfCorrectAnswer,student1);
+        Result result = new Result(countOfCorrectAnswer, test.getQuestions().size() + 1 - countOfCorrectAnswer, countOfCorrectAnswer, student1);
         resultRepository.save(result);
         return new ResultResponse(student1.getFirstName(),
                 countOfCorrectAnswer,

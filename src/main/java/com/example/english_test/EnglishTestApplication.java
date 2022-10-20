@@ -22,7 +22,7 @@ public class EnglishTestApplication {
     }
 
     @Bean
-    public CommandLineRunner commandLiner() {
+    public CommandLineRunner commandLineRunner() {
         return (args) -> {
             if (studentRepository.findStudentByAuthInfoEmail("aijamal@gmail.com") == null) {
                 AuthInfo authInfo = new AuthInfo("aijamal@gmail.com", passwordEncoder.encode("aijamal"), Role.STUDENT);
