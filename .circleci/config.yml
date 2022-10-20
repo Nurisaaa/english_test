@@ -22,7 +22,7 @@ workflows:
           no-output-timeout: 20m
           path: ./
           region: AWS_DEFAULT_REGION
-          repo: enlglish_test
+          repo: enlgiish_test
           skip-when-tags-exist: false
           tag: $CIRCLE_SHA1
           filters:
